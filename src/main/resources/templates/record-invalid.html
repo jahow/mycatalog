@@ -1,22 +1,17 @@
 <html>
 <head>
   <title>My Catalog</title>
-  <div th:replace="'./fragments/header-files'"></div>
+  <div th:replace="fragments/header-files"></div>
 </head>
 <body>
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a th:href="@{/admin}">Catalog records</a></li>
-    <li class="breadcrumb-item active" aria-current="page">
-      Invalid record
-    </li>
-  </ol>
-</nav>
+<div th:replace="fragments/top-bar :: main (null, false, false, true)"></div>
 
 <div>
   <p>this record does not exist!</p>
 </div>
+
+<div th:replace="fragments/bottom-bar :: main"></div>
 
 </body>
 </html>

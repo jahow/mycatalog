@@ -1,0 +1,51 @@
+<div th:fragment="main (currentRecord,editingRecord,creatingNewRecord,invalidRecord)"
+     class="border-bottom pt-3 bg-light mb-3">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+
+        <li class="breadcrumb-item active"
+            aria-current="page"
+            th:if="${currentRecord == null && !invalidRecord}">Catalog records
+        </li>
+
+        <li class="breadcrumb-item" th:if="${currentRecord != null || invalidRecord}">
+          <a th:href="@{/admin}">Catalog records</a>
+        </li>
+
+        <li class="breadcrumb-item active"
+            aria-current="page"
+            th:if="${invalidRecord}">
+          Invalid record
+        </li>
+
+        <li class="breadcrumb-item active"
+            aria-current="page"
+            th:if="${currentRecord != null && !editingRecord}">
+          <span th:text="${currentRecord.title}"></span>
+        </li>
+
+        <li class="breadcrumb-item active"
+            aria-current="page"
+            th:if="${currentRecord != null && editingRecord && !creatingNewRecord}">
+          <a th:href="@{'/admin/record/' + ${currentRecord.identifier}}">
+            <span th:text="${currentRecord.title}"></span>
+          </a>
+        </li>
+
+        <li class="breadcrumb-item active"
+            aria-current="page"
+            th:if="${currentRecord != null && editingRecord && !creatingNewRecord}">
+          Edit
+        </li>
+
+        <li class="breadcrumb-item active"
+            aria-current="page"
+            th:if="${creatingNewRecord}">
+          New record
+        </li>
+
+      </ol>
+    </nav>
+  </div>
+</div>

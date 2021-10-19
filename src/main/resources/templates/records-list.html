@@ -1,15 +1,11 @@
 <html>
 <head>
   <title>My Catalog</title>
-  <div th:replace="'./fragments/header-files'"></div>
+  <div th:replace="fragments/header-files"></div>
 </head>
 <body>
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page">Catalog records</li>
-  </ol>
-</nav>
+<div th:replace="fragments/top-bar :: main (null, false, false, false)"></div>
 
 <div>
   <ul>
@@ -21,6 +17,8 @@
   </ul>
   <p><a th:href="@{/admin/record/new}">Add a new record</a></p>
 </div>
+
+<div th:replace="fragments/bottom-bar :: main"></div>
 
 </body>
 </html>
