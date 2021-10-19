@@ -1,5 +1,27 @@
+<html>
+<head>
+  <title>My Catalog</title>
+  <div th:replace="'./fragments/header-files'"></div>
+</head>
+<body>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a th:href="@{/admin}">Catalog records</a></li>
+    <li class="breadcrumb-item active" aria-current="page" th:if="!${isNew}">
+      <a th:href="@{'/admin/record/' + ${record.identifier}}"><span th:text="${record.title}"></span></a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page" th:if="!${isNew}">
+      Edit
+    </li>
+    <li class="breadcrumb-item active" aria-current="page" th:if="${isNew}">
+      New record
+    </li>
+  </ol>
+</nav>
+
 <form action="#"
-      th:action="${isNew} ? './' : '../'"
+      th:action="@{/admin/record}"
       th:object="${record}"
       method="post">
   <label>Identifier
@@ -15,3 +37,6 @@
   <input th:if="${isNew}" type="submit" value="Create record">
   <input th:if="!${isNew}" type="submit" value="Update record">
 </form>
+
+</body>
+</html>

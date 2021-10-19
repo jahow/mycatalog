@@ -1,10 +1,25 @@
-<div>
-  <a th:href="'../index'">Catalog records</a> > <span th:text="${record.title}"></span>
-</div>
+<html>
+<head>
+  <title>My Catalog</title>
+  <div th:replace="'./fragments/header-files'"></div>
+</head>
+<body>
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a th:href="@{/admin}">Catalog records</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <span th:text="${record.title}"></span>
+    </li>
+  </ol>
+</nav>
 
 <div>
   <p>record view for <span th:text="${record.identifier}"></span></p>
   <p>title: <span th:text="${record.title}"></span></p>
   <p>description: <span th:text="${record.description}"></span></p>
-  <p><a th:href="'./' + ${record.identifier} + '/edit'">edit this record</a></p>
+  <p><a th:href="@{'/admin/record/' + ${record.identifier} + '/edit'}">edit this record</a></p>
 </div>
+
+</body>
+</html>

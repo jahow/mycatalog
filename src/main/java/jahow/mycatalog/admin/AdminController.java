@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("${openapi.myCatalog.base-path}/admin")
+@RequestMapping("/admin")
 public class AdminController {
   @Autowired
   CatalogRecordsService recordsService;
@@ -63,7 +63,7 @@ public class AdminController {
       return "record-edit";
     }
     var upsertedRecord = upsertResult.getResultValue();
-    return String.format("redirect:./%s", upsertedRecord.getIdentifier());
+    return String.format("redirect:./record/%s", upsertedRecord.getIdentifier());
   }
 
   private String preRecordView(String recordIdentifier, Model model) {
