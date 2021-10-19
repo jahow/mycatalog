@@ -1,0 +1,17 @@
+<form action="#"
+      th:action="${isNew} ? './' : '../'"
+      th:object="${record}"
+      method="post">
+  <label>Identifier
+    <input type="text" th:field="*{identifier}">
+  </label>
+  <label>Title
+    <input type="text" th:field="*{title}">
+  </label>
+  <label>Description
+    <input type="text" th:field="*{description}">
+  </label>
+
+  <input th:if="${isNew}" type="submit" value="Create record">
+  <input th:if="!${isNew}" type="submit" value="Update record">
+</form>

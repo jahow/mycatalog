@@ -1,0 +1,14 @@
+<div>
+  <a th:href="'./index'">Catalog records</a>
+</div>
+
+<div>
+  <ul>
+    <li th:each="record : ${records}">
+      <span th:text="*{record.title}"></span>
+      (<span th:text="*{record.identifier}"></span>)
+      - <a th:href="'./record/' + ${record.identifier} + '/edit'">edit this</a>
+    </li>
+  </ul>
+  <p><a href="./record/new">Add a new record</a></p>
+</div>

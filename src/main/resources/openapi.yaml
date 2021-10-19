@@ -1,0 +1,226 @@
+openapi: 3.0.3
+info:
+  title: MyCatalog
+  description: "A catalog for all kinds of data."
+  contact:
+    email: olivier.guyot@camptocamp.com
+  version: 0.0.1-SNAPSHOT
+servers:
+  - url: https://mycatalog.swagger.io/v1
+
+paths:
+  /import:
+    post:
+      summary: Import a catalog record
+      operationId: importRecord
+      responses:
+        200:
+          description: record was imported
+          content: {}
+        400:
+          description: something went wrong and import failed
+          content: {}
+
+  /records:
+    get:
+      summary: Get a list of all catalog records
+      operationId: getAllRecords
+      responses:
+        200:
+          description: returns all records
+          content:
+            'application/json':
+              schema:
+                type: array
+                description: A list of distributions of the described dataset
+                items:
+                  $ref: '#/components/schemas/CatalogRecordBrief'
+    post:
+      summary: Create a new catalog record
+      operationId: createRecord
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CatalogRecord'
+      responses:
+        201:
+          description: returns the created record
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CatalogRecord'
+        400:
+          description: a record with the same identifier was already existing
+
+  /records/{identifier}:
+    get:
+      summary: Get a catalog record
+      operationId: getRecord
+      parameters:
+        - name: identifier
+          in: path
+          description: Record unique identifier.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: returns the record
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CatalogRecord'
+    post:
+      summary: Update an existing catalog record
+      operationId: updateRecord
+      parameters:
+        - name: identifier
+          in: path
+          description: Record unique identifier.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/CatalogRecord'
+      responses:
+        200:
+          description: returns the updated record
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/CatalogRecord'
+        400:
+          description: record was not found
+
+components:
+  schemas:
+    CatalogRecordBrief:
+      type: object
+      description: An entry in the catalog, in brief form
+      required: [identifier, title, kind]
+      properties:
+        identifier:
+          type: string
+          description: Unique identifier of the record
+        title:
+          type: string
+          description: A human readable name given to the record
+        description:
+          type: string
+          description: A textual description of the record. Can include Markdown for formatting
+        created:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time of the creation of the record
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+          description: The date and time of the last modification of the record
+        kind:
+          type: string
+          description: 'Record kind: either dataset or service'
+          enum: [service,dataset]
+
+    BaseCatalogRecord:
+      type: object
+      description: An entry in the catalog, used to describe either datasets or service endpoints
+      allOf:
+        - $ref: '#/components/schemas/CatalogRecordBrief'
+
+    DatasetRecord:
+      allOf:
+        - $ref: '#/components/schemas/BaseCatalogRecord'
+      properties:
+        distributions:
+          type: array
+          description: A list of distributions of the described dataset
+          items:
+            $ref: '#/components/schemas/DatasetDistribution'
+
+    ServiceRecord:
+      allOf:
+        - $ref: '#/components/schemas/BaseCatalogRecord'
+      properties:
+        endpoints:
+          type: array
+          description: A list of endpoints to access a service
+          items:
+            $ref: '#/components/schemas/ServiceEndpoint'
+
+    CatalogRecord:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/DatasetRecord'
+        - $ref: '#/components/schemas/ServiceRecord'
+      discriminator:
+        propertyName: kind
+        mapping:
+          dataset: '#/components/schemas/DatasetRecord'
+          service: '#/components/schemas/ServiceRecord'
+
+    DatasetDistribution:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/DatasetDownloadDistribution'
+        - $ref: '#/components/schemas/DatasetServicedDistribution'
+
+    DatasetDownloadDistribution:
+      type: object
+      required: [downloadUrl]
+      properties:
+        downloadUrl:
+          type: string
+          example: 'https://my.server.org/downloads/data.json'
+          description: A fully qualified download link for this distribution
+        mimeType:
+          readOnly: true
+          type: string
+          example: 'application/geo+json'
+          description: The MIME type of the downloadable resource (as advertised by the HTTP or FTP server)
+        sizeBytes:
+          readOnly: true
+          type: integer
+          example: 210
+          description: The size in bytes of the downloadable resource (as advertised by the HTTP or FTP server)
+        updated:
+          type: string
+          format: date-time
+          readOnly: true
+          example: 2021-03-12T04:15:50
+          description: The date and time of the last modification of the downloadable resource (as advertised by the HTTP or FTP server)
+
+    DatasetServicedDistribution:
+      type: object
+      required: [accessServiceUrl, accessServiceProtocol]
+      properties:
+        accessServiceUrl:
+          type: string
+          example: 'https://my.server.org/geoserver/wms'
+          description: A fully qualified access URL for this service
+        accessServiceProtocol:
+          type: string
+          example: 'http://www.opengeospatial.org/standards/wms'
+          description: A value taken from a codelist that describes the protocol used to interact with this service
+        identifierInService:
+          type: string
+          example: all_roads
+          description: An optional identifier of the dataset in the service, e.g. an OGC:WMS layer name
+
+    ServiceEndpoint:
+      type: object
+      required: [endpointUrl, protocol]
+      properties:
+        endpointUrl:
+          type: string
+          example: 'https://my.server.org/geoserver/wms'
+          description: A fully qualified access URL for this service
+        protocol:
+          type: string
+          example: 'http://www.opengeospatial.org/standards/wms'
+          description: A value taken from a codelist that describes the protocol used to interact with this service

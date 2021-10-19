@@ -1,0 +1,10 @@
+<div>
+  <a th:href="'../index'">Catalog records</a> > <span th:text="${record.title}"></span>
+</div>
+
+<div>
+  <p>record view for <span th:text="${record.identifier}"></span></p>
+  <p>title: <span th:text="${record.title}"></span></p>
+  <p>description: <span th:text="${record.description}"></span></p>
+  <p><a th:href="'./' + ${record.identifier} + '/edit'">edit this record</a></p>
+</div>
