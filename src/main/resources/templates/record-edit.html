@@ -7,23 +7,37 @@
 
 <div th:replace="fragments/top-bar :: main(${record}, true, ${isNew}, false)"></div>
 
-<form action="#"
-      th:action="@{/admin/record}"
-      th:object="${record}"
-      method="post">
-  <label>Identifier
-    <input type="text" th:field="*{identifier}">
-  </label>
-  <label>Title
-    <input type="text" th:field="*{title}">
-  </label>
-  <label>Description
-    <input type="text" th:field="*{description}">
-  </label>
+<div class="container">
+  <div class="card col-12 col-xl-10">
+    <div class="card-body">
+      <form action="#" class="m-0"
+            th:action="@{/admin/record}"
+            th:object="${record}"
+            method="post">
 
-  <input th:if="${isNew}" type="submit" value="Create record">
-  <input th:if="!${isNew}" type="submit" value="Update record">
-</form>
+        <label class="text-muted small">Identifier</label>
+        <input th:if="${isNew}"
+               type="text"
+               class="form-control mb-3"
+               th:field="*{identifier}">
+        <input th:if="!${isNew}"
+               type="text"
+               class="form-control mb-3"
+               readonly
+               th:field="*{identifier}">
+
+        <label class="text-muted small">Titre</label>
+        <input type="text" class="form-control mb-3" th:field="*{title}">
+
+        <label class="text-muted small">Description</label>
+        <textarea class="form-control mb-3" th:field="*{description}"></textarea>
+
+        <button th:if="${isNew}" type="submit" class="btn btn-primary">Create record</button>
+        <button th:if="!${isNew}" type="submit" class="btn btn-primary">Update record</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <div th:replace="fragments/bottom-bar :: main"></div>
 
