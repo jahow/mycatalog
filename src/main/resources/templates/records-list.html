@@ -7,15 +7,24 @@
 
 <div th:replace="fragments/top-bar :: main (null, false, false, false)"></div>
 
-<div>
-  <ul>
-    <li th:each="record : ${records}">
-      <a th:text="*{record.title}" th:href="@{'/admin/record/' + ${record.identifier}}"></a>
-      (<span th:text="*{record.identifier}"></span>)
-      - <a th:href="@{'/admin/record/' + ${record.identifier} + '/edit'}">edit this</a>
-    </li>
-  </ul>
-  <p><a th:href="@{/admin/record/new}">Add a new record</a></p>
+<div class="container">
+  <div class="col-12 col-xl-8 card mb-3" th:each="record : ${records}">
+    <div class="card-body d-flex justify-content-between align-items-start">
+      <div>
+        <a class="d-block card-link mb-1 me-2" th:href="@{'/admin/record/' + ${record.identifier}}" th:text="*{record.title}"></a>
+        <div class="card-text text-muted">
+          <small>Identifier: </small><code th:text="*{record.identifier}"></code>
+        </div>
+        <div class="card-text text-muted">
+          <small>Updated on <span th:text="*{record.updated}"></span></small>
+        </div>
+      </div>
+      <a class="btn btn-secondary" role="button" th:href="@{'/admin/record/' + ${record.identifier} + '/edit'}">Edit</a>
+    </div>
+  </div>
+  <div>
+    <a class="btn btn-primary" role="button" th:href="@{/admin/record/new}">Add a new record</a>
+  </div>
 </div>
 
 <div th:replace="fragments/bottom-bar :: main"></div>
