@@ -105,10 +105,14 @@ components:
       properties:
         identifier:
           type: string
+          pattern: '^[\w-]+$' # a-z A-Z 0-9 underscore dash
+          minLength: 3
           description: Unique identifier of the record
         title:
           type: string
           description: A human readable name given to the record
+          pattern: '^(?!\s*$).+' # at least one non-space character
+          minLength: 1
         description:
           type: string
           description: A textual description of the record. Can include Markdown for formatting

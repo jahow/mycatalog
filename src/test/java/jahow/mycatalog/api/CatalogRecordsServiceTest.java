@@ -12,9 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -49,6 +53,7 @@ class CatalogRecordsServiceTest {
     this.existingRecord.identifier("existing");
     this.existingRecord.created(OffsetDateTime.parse("2010-01-01T00:00:00Z"));
     this.existingRecord.updated(OffsetDateTime.parse("2011-01-01T00:00:00Z"));
+    this.existingRecord.kind(KindEnum.DATASET);
     this.existingEntity = this.mapper.toEntity(this.existingRecord);
     this.existingEntity.setInternalId(1234L);
 
@@ -98,12 +103,25 @@ class CatalogRecordsServiceTest {
   }
 
   @Test
+  void createCatalogRecord_invalidId() {
+    var record = new CatalogRecord();
+    record.identifier("ab,; ");
+    record.title("   ");
+    record.description("record abstract!");
+    record.kind(KindEnum.DATASET);
+    var result = this.recordService.createCatalogRecord(record);
+
+    assertFalse(result.hasSucceeded(), "creation should fail");
+    assertEquals("record.create.invalidObject", result.getErrorCode());
+    verify(this.mockRepository, times(0)).save(any(CatalogRecordEntity.class));
+  }
+
+  @Test
   void updateCatalogRecord() {
     var record = new CatalogRecord();
     record.identifier("existing");
-    record.title("record title");
-    record.description("record abstract!");
-    record.kind(KindEnum.DATASET);
+    record.title("Updated title");
+    record.description("Updated abstract!");
     var result = this.recordService.updateCatalogRecord(record);
     var updated = result.getResultValue();
 
@@ -134,6 +152,18 @@ class CatalogRecordsServiceTest {
 
     assertFalse(result.hasSucceeded(), "update should fail");
     assertEquals("record.update.notFound", result.getErrorCode());
+    verify(this.mockRepository, times(0)).save(any(CatalogRecordEntity.class));
+  }
+
+  @Test
+  void updateCatalogRecord_emptyTitle() {
+    var record = new CatalogRecord();
+    record.identifier("existing");
+    record.title("   ");
+    var result = this.recordService.updateCatalogRecord(record);
+
+    assertFalse(result.hasSucceeded(), "update should fail");
+    assertEquals("record.update.invalidObject", result.getErrorCode());
     verify(this.mockRepository, times(0)).save(any(CatalogRecordEntity.class));
   }
 

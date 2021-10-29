@@ -21,37 +21,37 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>2.5.5</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+            <version>1.18.22</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
+            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
+            <version>1.4.200</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -76,27 +76,28 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.4.1.Final</version>
+            <version>1.4.2.Final</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
-            <version>1.4.1.Final</version>
+            <version>1.4.2.Final</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.mockito</groupId>-->
-        <!--            <artifactId>mockito-core</artifactId>-->
-        <!--            <version>3.9.0</version>-->
-        <!--            <scope>test</scope>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>2.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
+            <version>2.5.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>2.5.5</version>
         </dependency>
     </dependencies>
 
@@ -163,10 +164,6 @@
     <profiles>
         <profile>
             <id>debug</id>
-<!--            <properties>-->
-<!--                <spring.thymeleaf.cache>false</spring.thymeleaf.cache>-->
-<!--                <spring.thymeleaf.prefix>file:src/main/resources/templates/</spring.thymeleaf.prefix>-->
-<!--            </properties>-->
             <build>
                 <plugins>
                     <plugin>

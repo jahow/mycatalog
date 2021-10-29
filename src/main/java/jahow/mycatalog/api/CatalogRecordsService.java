@@ -6,9 +6,12 @@ import jahow.mycatalog.repository.CatalogRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,6 +22,9 @@ public class CatalogRecordsService {
   @Autowired
   private CatalogRecordRepository repository;
 
+  @Autowired
+  private Validator validator;
+
   public OperationResult<CatalogRecord> createCatalogRecord(CatalogRecord record) {
     if (this.repository.findByIdentifier(record.getIdentifier()).isPresent()) {
       return OperationResult.error("record.create.alreadyExists");
@@ -26,6 +32,12 @@ public class CatalogRecordsService {
     var now = OffsetDateTime.now();
     record.setCreated(now);
     record.setUpdated(now);
+
+    Set<ConstraintViolation<CatalogRecord>> violations = validator.validate(record);
+    if (!violations.isEmpty()) {
+      return OperationResult.error("record.create.invalidObject");
+    }
+
     CatalogRecordEntity e = this.repository.save(this.mapper.toEntity(record));
     return OperationResult.ok(this.mapper.toModel(e));
   }
@@ -35,12 +47,24 @@ public class CatalogRecordsService {
     if (result.isEmpty()) {
       return OperationResult.error("record.update.notFound");
     }
-    var existing = result.get();
-    var entity = this.mapper.toEntity(record);
-    entity.setCreated(existing.getCreated());
-    entity.setUpdated(OffsetDateTime.now());
-    entity.setInternalId(existing.getInternalId());
-    var updated = this.repository.save(entity);
+    var existingEntity = result.get();
+    var existingRecord = this.mapper.toModel(existingEntity);
+    record.created(existingRecord.getCreated());
+    record.updated(OffsetDateTime.now());
+    if (record.getDescription() == null)
+      record.description(existingRecord.getDescription());
+    if (record.getKind() == null)
+      record.kind(existingRecord.getKind());
+
+    Set<ConstraintViolation<CatalogRecord>> violations = validator.validate(record);
+    if (!violations.isEmpty()) {
+      return OperationResult.error("record.update.invalidObject");
+    }
+
+    var updatedEntity = this.mapper.toEntity(record);
+    updatedEntity.setInternalId(existingEntity.getInternalId());
+
+    var updated = this.repository.save(updatedEntity);
     return OperationResult.ok(this.mapper.toModel(updated));
   }
 
