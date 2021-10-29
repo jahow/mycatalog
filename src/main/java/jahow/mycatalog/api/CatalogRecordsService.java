@@ -37,10 +37,11 @@ public class CatalogRecordsService {
     }
     var existing = result.get();
     var entity = this.mapper.toEntity(record);
+    entity.setCreated(existing.getCreated());
     entity.setUpdated(OffsetDateTime.now());
     entity.setInternalId(existing.getInternalId());
-    this.repository.save(entity);
-    return OperationResult.ok(this.mapper.toModel(entity));
+    var updated = this.repository.save(entity);
+    return OperationResult.ok(this.mapper.toModel(updated));
   }
 
   public OperationResult<CatalogRecord> readCatalogRecord(String recordIdentifier) {
