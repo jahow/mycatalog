@@ -13,8 +13,16 @@
       <div class="text-muted small">Titre</div>
       <h5 class="card-title mb-3" th:text="${record.title}"></h5>
 
-      <div class="text-muted small">Identifier</div>
-      <div class="card-text mb-3"><code th:text="${record.identifier}"></code></div>
+      <div class="row mb-3">
+        <div class="col">
+          <div class="text-muted small">Identifier</div>
+          <div class="card-text"><code th:text="${record.identifier}"></code></div>
+        </div>
+        <div class="col">
+          <div class="text-muted small">Kind</div>
+          <p class="card-text" th:text="${record.kind}"></p>
+        </div>
+      </div>
 
       <div class="row mb-3">
         <div class="col">

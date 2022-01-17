@@ -60,6 +60,9 @@ public class AdminController {
       upsertResult = this.recordsService.createCatalogRecord(record);
     }
     if (!upsertResult.hasSucceeded()) {
+      model.addAttribute("record", record);
+      model.addAttribute("isNew", false);
+      model.addAttribute("error", upsertResult.getErrorCode());
       return "record-edit";
     }
     var upsertedRecord = upsertResult.getResultValue();
